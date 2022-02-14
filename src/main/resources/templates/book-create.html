@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Create book</title></head>
+    <link th:href="@{/styles/book-create.css}" rel="stylesheet" />
+</head>
+<body>
+<div id="absoluteCenteredDiv">
+    <form action="/book-create" method="post">
+        <div class="box">
+            <h1>Add Book</h1>
+            <input class="field" name="title" placeholder="Title">
+            <input class="field" name="isbn" placeholder="ISBN">
+            <input class="field" name="author" placeholder="Author">
+            <button class="button" type="submit">Save book</button>
+        </div>
+    </form>
+</div>
+</body>
+</html>
