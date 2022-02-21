@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Saved books</title></head>
+<link th:href="@{/styles/styles.css}" rel="stylesheet"/>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<body>
+<div id="absoluteCenteredDiv">
+    <form id="createBook">
+        <div class="box">
+            <h1>Books</h1>
+            <input class="field" name="title" placeholder="Title">
+            <input class="field" name="isbn" placeholder="ISBN">
+            <input class="field" name="author" placeholder="Author">
+            <button class="button" type="submit">Save book</button>
+        </div>
+    </form>
+</div>
+<div id="absoluteCenteredDiv2">
+    <input class="field" name="searchBook" id="searchBookId" placeholder="Search book">
+    <button class="button" id="searchButton">Search</button>
+</div>
+<table>
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>ISBN</th>
+        <th>Author</th>
+    </tr>
+    </thead>
+    <tbody id="booksList">
+    <tr th:each="book: ${books}">
+        <td th:text="${book.title}"></td>
+        <td th:text="${book.isbn}"></td>
+        <td th:text="${book.author}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<script>
+    $(function () {
+        function getBooks() {
+            var $books = $('#booksList');
+
+            $.ajax({
+                url: '/get-books',
+                success: function (response) {
+                    $books.empty();
+                    response.forEach(function (book) {
+                        $books.append('<tr><td>' + book.title + '</td><td>' + book.isbn + '</td><td>' + book.author + '</td></tr>');
+                    })
+                }
+            });
+        }
+
+        $('#createBook').submit(function (e) {
+            e.preventDefault();
+
+            $.ajax({
+                type: 'POST',
+                url: '/book-create',
+                dataType: 'json',
+                data: JSON.stringify({
+                    title: $(this).find('[name=title]').val(),
+                    isbn: $(this).find('[name=isbn]').val(),
+                    author: $(this).find('[name=author]').val(),
+                }),
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('Content-Type', 'application/json')
+                },
+                success: function (response) {
+                    console.log(JSON.stringify(response));
+                    getBooks();
+                }
+            });
+        });
+
+        $('#searchButton').click(function (e) {
+            var $books = $('#booksList');
+
+            var query = $('#searchBookId').val();
+            $.ajax({
+                url: '/get-books?name=' + query,
+                success: function (response) {
+                    $books.empty();
+                    response.forEach(function (book) {
+                        $books.append('<tr><td>' + book.title + '</td><td>' + book.isbn + '</td><td>' + book.author + '</td></tr>');
+                    })
+                }
+            });
+        });
+
+    });
+</script>
+</body>
+</html>

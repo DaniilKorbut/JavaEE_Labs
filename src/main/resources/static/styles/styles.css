@@ -1,3 +1,31 @@
+.field {
+    background: #ecf0f1;
+    border: #ccc 1px solid;
+    border-bottom: #ccc 2px solid;
+    padding: 8px;
+    width: 250px;
+    color: #525252;
+    margin-top: 10px;
+    font-size: 1em;
+    border-radius: 4px;
+}
+
+.field:focus {
+    outline: none;
+    border-color: dodgerblue;
+}
+
+p {
+    font-size: 12px;
+    text-decoration: none;
+    color: #ffffff;
+}
+
+h1 {
+    font-size: 1.5em;
+    color: #525252;
+}
+
 body {
     font-family: sans-serif;
 }
@@ -24,19 +52,6 @@ table td {
     padding: 5px;
 }
 
-.my-link {
-    text-align: center;
-    display: block;
-    border-radius: 5px;
-    padding: 4px;
-    background-color: dodgerblue;
-    width: 8em;
-    margin: auto;
-    text-decoration: none;
-    font-weight: bold;
-    color: white;
-}
-
 .button {
     text-align: center;
     display: block;
@@ -52,6 +67,16 @@ table td {
     font-size: 0.9em;
     cursor: pointer;
 }
+
 .button:hover {
     background: #2CC06B;
+}
+
+#absoluteCenteredDiv, #absoluteCenteredDiv2 {
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    text-align: center;
 }
