@@ -24,9 +24,10 @@
 <table>
     <thead>
     <tr>
-        <th>Name</th>
+        <th>Title</th>
         <th>ISBN</th>
         <th>Author</th>
+        <th style="width: 100px; text-align: center"></th>
     </tr>
     </thead>
     <tbody id="booksList">
@@ -34,6 +35,7 @@
         <td th:text="${book.title}"></td>
         <td th:text="${book.isbn}"></td>
         <td th:text="${book.author}"></td>
+        <td><a th:href="@{/book/{isbn}(isbn=${book.isbn})}">Перейти</a></td>
     </tr>
     </tbody>
 </table>
@@ -48,7 +50,7 @@
                 success: function (response) {
                     $books.empty();
                     response.forEach(function (book) {
-                        $books.append('<tr><td>' + book.title + '</td><td>' + book.isbn + '</td><td>' + book.author + '</td></tr>');
+                        $books.append('<tr><td>' + book.title + '</td><td>' + book.isbn + '</td><td>' + book.author + '</td><td><a href="/book/'+book.isbn+'">Перейти</a></td></tr>');
                     })
                 }
             });
@@ -85,7 +87,7 @@
                 success: function (response) {
                     $books.empty();
                     response.forEach(function (book) {
-                        $books.append('<tr><td>' + book.title + '</td><td>' + book.isbn + '</td><td>' + book.author + '</td></tr>');
+                        $books.append('<tr><td>' + book.title + '</td><td>' + book.isbn + '</td><td>' + book.author + '</td><td><a href="/book/'+book.isbn+'">Перейти</a></td></tr>');
                     })
                 }
             });

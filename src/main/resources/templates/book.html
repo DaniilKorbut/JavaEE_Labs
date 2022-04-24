@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Book</title>
+</head>
+<link th:href="@{/styles/styles.css}" rel="stylesheet"/>
+<body>
+<div id="absoluteCenteredDiv3" class="book-page" style="margin-top: 20px;">
+    <b>Title: </b><span th:text="${book.title}"></span><br>
+    <br>
+    <b>ISBN: </b><span th:text="${book.isbn}"></span><br>
+    <br>
+    <b>Author: </b><span th:text="${book.author}"></span><br>
+</div>
+</body>
+</html>
