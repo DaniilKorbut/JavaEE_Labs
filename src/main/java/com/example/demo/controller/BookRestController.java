@@ -4,11 +4,10 @@ import com.example.demo.db.BookEntity;
 import com.example.demo.db.BookService;
 import com.example.demo.dto.BookResponseDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,15 +27,15 @@ public class BookRestController {
     }
 
     @GetMapping("/get-books")
-    public ResponseEntity<List<BookEntity>> getBooks(
-            @RequestParam(name = "name", required = false) final String query
+    public ResponseEntity<Page<BookEntity>> getBooks(
+            @RequestParam(name = "name", required = false) final String query, @RequestParam(name = "page", required = false, defaultValue = "0") final int page
     ) {
         System.out.println("Accept get book request: " + (query == null ? "No query" : query));
-        List<BookEntity> response;
-        if(query == null) {
-            response = bookService.getAllBooks();
+        Page<BookEntity> response;
+        if(query == null || query.equals("")) {
+            response = bookService.getAllBooks(page);
         } else {
-            response = bookService.findBooks(query);
+            response = bookService.findBooks(query, page);
         }
         return ResponseEntity
                 .status(HttpStatus.OK)

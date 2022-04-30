@@ -39,19 +39,67 @@
     </tr>
     </tbody>
 </table>
-
+<div id="pageArrows">
+    <button class="button" style="width: 100px; margin: 5px" onclick="previousPage()" th:classappend="${isFirst} ? 'display-none' : 'display-block'"><</button>
+    <button class="button" style="width: 100px; margin: 5px" onclick="nextPage()" th:classappend="${isLast} ? 'display-none' : 'display-block'">></button>
+</div>
 <script>
+    let currentPage = 0;
+    let lastSearch = "";
+
+    function previousPage() {
+        turnPage(false);
+    }
+
+    function nextPage() {
+        turnPage(true);
+    }
+
+    function turnPage(next) {
+        let goTo = next ? currentPage + 1 : currentPage - 1;
+        var $books = $('#booksList');
+        var $pageArrows = $('#pageArrows');
+        $.ajax({
+            url: '/get-books?name='+ lastSearch + '&page='+goTo,
+            success: function (response) {
+                $books.empty();
+                $pageArrows.empty();
+                let books = response.content;
+                books.forEach(function (book) {
+                    $books.append('<tr><td>' + book.title + '</td><td>' + book.isbn + '</td><td>' + book.author + '</td><td><a href="/book/' + book.isbn + '">Перейти</a></td></tr>');
+                })
+                if(!response.first) {
+                    $pageArrows.append('<button class="button" style="width: 100px; display: inline-block; margin: 5px" onclick="previousPage()"><</button>')
+                }
+                if(!response.last) {
+                    $pageArrows.append('<button class="button" style="width: 100px; display: inline-block; margin: 5px" onclick="nextPage()">></button>')
+                }
+                currentPage = response.pageable.pageNumber;
+            }
+        });
+    }
+
     $(function () {
         function getBooks() {
             var $books = $('#booksList');
-
+            var $pageArrows = $('#pageArrows');
             $.ajax({
                 url: '/get-books',
                 success: function (response) {
                     $books.empty();
-                    response.forEach(function (book) {
-                        $books.append('<tr><td>' + book.title + '</td><td>' + book.isbn + '</td><td>' + book.author + '</td><td><a href="/book/'+book.isbn+'">Перейти</a></td></tr>');
+                    $pageArrows.empty();
+                    let books = response.content;
+                    books.forEach(function (book) {
+                        $books.append('<tr><td>' + book.title + '</td><td>' + book.isbn + '</td><td>' + book.author + '</td><td><a href="/book/' + book.isbn + '">Перейти</a></td></tr>');
                     })
+                    if(!response.first) {
+                        $pageArrows.append('<button class="button" style="width: 100px; display: inline-block; margin: 5px" onclick="previousPage()"><</button>')
+                    }
+                    if(!response.last) {
+                        $pageArrows.append('<button class="button" style="width: 100px; display: inline-block; margin: 5px" onclick="nextPage()">></button>')
+                    }
+                    currentPage = response.pageable.pageNumber;
+                    lastSearch = "";
                 }
             });
         }
@@ -80,15 +128,25 @@
 
         $('#searchButton').click(function (e) {
             var $books = $('#booksList');
-
+            var $pageArrows = $('#pageArrows');
             var query = $('#searchBookId').val();
+            lastSearch = query;
             $.ajax({
                 url: '/get-books?name=' + query,
                 success: function (response) {
                     $books.empty();
-                    response.forEach(function (book) {
-                        $books.append('<tr><td>' + book.title + '</td><td>' + book.isbn + '</td><td>' + book.author + '</td><td><a href="/book/'+book.isbn+'">Перейти</a></td></tr>');
+                    $pageArrows.empty();
+                    let books = response.content;
+                    books.forEach(function (book) {
+                        $books.append('<tr><td>' + book.title + '</td><td>' + book.isbn + '</td><td>' + book.author + '</td><td><a href="/book/' + book.isbn + '">Перейти</a></td></tr>');
                     })
+                    if(!response.first) {
+                        $pageArrows.append('<button class="button" style="width: 100px; display: inline-block; margin: 5px" onclick="previousPage()"><</button>')
+                    }
+                    if(!response.last) {
+                        $pageArrows.append('<button class="button" style="width: 100px; display: inline-block; margin: 5px" onclick="nextPage()">></button>')
+                    }
+                    currentPage = response.pageable.pageNumber;
                 }
             });
         });

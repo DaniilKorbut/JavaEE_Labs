@@ -1,17 +1,20 @@
 package com.example.demo.db;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
-import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class BookService {
 
-    private final EntityManager entityManager;
+    private final BookRepository bookRepository;
+    private static final int PAGE_SIZE = 10;
 
     @Transactional
     public BookEntity createBook(String title, String isbn, String author) {
@@ -19,29 +22,31 @@ public class BookService {
         book.setTitle(title);
         book.setIsbn(isbn);
         book.setAuthor(author);
-        return entityManager.merge(book);
+        return bookRepository.saveAndFlush(book);
     }
 
     @Transactional
     public BookEntity createBook(BookEntity bookEntity) {
-        return entityManager.merge(bookEntity);
+        return bookRepository.saveAndFlush(bookEntity);
     }
 
     @Transactional
     public BookEntity getBookByIsbn(String isbn) {
-        return entityManager.find(BookEntity.class, isbn);
+        Optional<BookEntity> optionalBook = bookRepository.findById(isbn);
+
+        return optionalBook
+                .orElse(null);
     }
 
     @Transactional
-    public List<BookEntity> getAllBooks() {
-        return entityManager.createQuery("SELECT b FROM BookEntity b", BookEntity.class)
-                .getResultList();
+    public Page<BookEntity> getAllBooks(int page) {
+        Pageable pageable = PageRequest.of(page, PAGE_SIZE);
+        return bookRepository.findAll(pageable);
     }
 
     @Transactional
-    public List<BookEntity> findBooks(String query) {
-        return entityManager.createQuery("SELECT b FROM BookEntity b WHERE b.title LIKE :query OR b.isbn LIKE :query OR b.author LIKE :query", BookEntity.class)
-                .setParameter("query", '%' + query + '%')
-                .getResultList();
+    public Page<BookEntity> findBooks(String query, int page) {
+        Pageable pageable = PageRequest.of(page, PAGE_SIZE);
+        return bookRepository.findAllByIsbnLikeOrTitleLike('%' + query + '%' , '%' + query + '%', pageable);
     }
 }

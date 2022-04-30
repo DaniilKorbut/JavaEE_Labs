@@ -26,7 +26,7 @@ public class BookServiceTests {
     @Sql("/BookService/init.sql")
     void shouldCreateBook() {
         bookService.createBook("Fourth Book", "13", "Fourth Author");
-        assertThat(bookService.getAllBooks())
+        assertThat(bookService.getAllBooks(0))
                 .hasSize(4);
     }
 
@@ -44,7 +44,7 @@ public class BookServiceTests {
     @Sql(value = "/BookService/clean-up.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @Sql("/BookService/init.sql")
     void shouldGetAllBooks() {
-        assertThat(bookService.getAllBooks())
+        assertThat(bookService.getAllBooks(0))
                 .hasSize(3);
     }
 
@@ -52,7 +52,7 @@ public class BookServiceTests {
     @Sql(value = "/BookService/clean-up.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @Sql("/BookService/init.sql")
     void shouldFindBooksByQuery() {
-        List<BookEntity> results = bookService.findBooks("Second Book");
+        List<BookEntity> results = bookService.findBooks("Second Book", 0).getContent();
         assertThat(results)
                 .hasSize(1);
         assertThat(results.get(0))
@@ -60,11 +60,7 @@ public class BookServiceTests {
                 .returns("11", BookEntity::getIsbn)
                 .returns("Second Author", BookEntity::getAuthor);
 
-        results = bookService.findBooks("Author");
-        assertThat(results)
-                .hasSize(3);
-
-        results = bookService.findBooks("12");
+        results = bookService.findBooks("12", 0).getContent();
         assertThat(results)
                 .hasSize(1);
         assertThat(results.get(0))
@@ -96,7 +92,7 @@ public class BookServiceTests {
     @DatabaseSetup("/BookService/init.xml")
     @DatabaseTearDown("/BookService/clean-up.xml")
     void shouldGetAllBooks_dbunit() {
-        assertThat(bookService.getAllBooks())
+        assertThat(bookService.getAllBooks(0))
                 .hasSize(3);
     }
 

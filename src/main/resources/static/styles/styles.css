@@ -77,11 +77,19 @@ table td {
     background: #2CC06B;
 }
 
-#absoluteCenteredDiv, #absoluteCenteredDiv2, #absoluteCenteredDiv3 {
+#absoluteCenteredDiv, #absoluteCenteredDiv2, #absoluteCenteredDiv3, #pageArrows {
     top: 0;
     bottom: 0;
     left: 0;
     right: 0;
     margin: auto;
     text-align: center;
+}
+
+.display-block {
+    display: inline-block;
+}
+
+.display-none {
+    display: none;
 }
