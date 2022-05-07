@@ -24,6 +24,7 @@ p {
 h1 {
     font-size: 1.5em;
     color: #525252;
+    text-align: center;
 }
 
 .book-page {
@@ -77,7 +78,7 @@ table td {
     background: #2CC06B;
 }
 
-#absoluteCenteredDiv, #absoluteCenteredDiv2, #absoluteCenteredDiv3, #pageArrows {
+#absoluteCenteredDiv, #absoluteCenteredDiv2, #absoluteCenteredDiv3, #pageArrows, #absoluteCenteredDiv4 {
     top: 0;
     bottom: 0;
     left: 0;

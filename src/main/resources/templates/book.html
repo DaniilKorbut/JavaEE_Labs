@@ -5,6 +5,7 @@
     <title>Book</title>
 </head>
 <link th:href="@{/styles/styles.css}" rel="stylesheet"/>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <body>
 <div id="absoluteCenteredDiv3" class="book-page" style="margin-top: 20px;">
     <b>Title: </b><span th:text="${book.title}"></span><br>
@@ -13,5 +14,42 @@
     <br>
     <b>Author: </b><span th:text="${book.author}"></span><br>
 </div>
+<div id="absoluteCenteredDiv4" th:if="${#authorization.expression('isFullyAuthenticated()')}">
+    <button class="button" id="addToFav" th:styleappend="${isFavourite} ? 'display: none;' : 'display: inline-block'">Add to Favourites</button>
+    <button class="button" id="removeFromFav" th:styleappend="${!isFavourite} ? 'display: none;' : 'display: inline-block'">Remove from Favourites</button>
+</div>
 </body>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+
+    const isbn = /*[[${book.isbn}]]*/ 'default';
+    console.log(isbn);
+
+    /*]]>*/
+    $(function () {
+
+        const $addToFav = $('#addToFav');
+        const $removeFromFav = $('#removeFromFav');
+        $addToFav.click(function (e) {
+            $.ajax({
+                type: "POST",
+                url: '/favourites/add?isbn=' + isbn,
+                success: function (response) {
+                    $addToFav.css("display", "none");
+                    $removeFromFav.css("display", "inline-block");
+                }
+            });
+        });
+        $removeFromFav.click(function (e) {
+            $.ajax({
+                type: "POST",
+                url: '/favourites/remove?isbn=' + isbn,
+                success: function (response) {
+                    $addToFav.css("display", "inline-block");
+                    $removeFromFav.css("display", "none");
+                }
+            });
+        });
+    });
+</script>
 </html>

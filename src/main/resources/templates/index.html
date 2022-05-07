@@ -2,14 +2,22 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title>Saved books</title></head>
+    <title>Books</title></head>
 <link th:href="@{/styles/styles.css}" rel="stylesheet"/>
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <body>
-<div id="absoluteCenteredDiv">
+<br>
+<div id="absoluteCenteredDiv4">
+    <div th:if="${#authorization.expression('isFullyAuthenticated()')}" style="margin-bottom: 20px"><b>Welcome, <th:block th:text="${#authorization.authentication.principal.username}" />.</b></div>
+    <a href="/login" class="button display-block" style="margin: 0" th:if="${#authorization.expression('isAnonymous()')}">Log In</a>
+    <a href="/register" class="button display-block" style="margin: 0" th:if="${#authorization.expression('isAnonymous()')}">Sign Up</a>
+    <a href="/logout" class="button display-block" style="margin: 0" th:if="${#authorization.expression('isFullyAuthenticated()')}">Log Out</a>
+    <a href="/favourites" class="button display-block" style="margin: 0" th:if="${#authorization.expression('isFullyAuthenticated()')}">Favourite Books</a>
+</div>
+<h1>Books</h1>
+<div id="absoluteCenteredDiv" th:if="${#authorization.expression('hasAuthority(''ADMIN'')')}">
     <form id="createBook">
         <div class="box">
-            <h1>Books</h1>
             <input class="field" name="title" placeholder="Title">
             <input class="field" name="isbn" placeholder="ISBN">
             <input class="field" name="author" placeholder="Author">
@@ -35,7 +43,7 @@
         <td th:text="${book.title}"></td>
         <td th:text="${book.isbn}"></td>
         <td th:text="${book.author}"></td>
-        <td><a th:href="@{/book/{isbn}(isbn=${book.isbn})}">Перейти</a></td>
+        <td><a class="button" style="margin: 0" th:href="@{/book/{isbn}(isbn=${book.isbn})}">Open</a></td>
     </tr>
     </tbody>
 </table>
@@ -66,7 +74,7 @@
                 $pageArrows.empty();
                 let books = response.content;
                 books.forEach(function (book) {
-                    $books.append('<tr><td>' + book.title + '</td><td>' + book.isbn + '</td><td>' + book.author + '</td><td><a href="/book/' + book.isbn + '">Перейти</a></td></tr>');
+                    $books.append('<tr><td>' + book.title + '</td><td>' + book.isbn + '</td><td>' + book.author + '</td><td><a class="button" style="margin: 0" href="/book/' + book.isbn + '">Open</a></td></tr>');
                 })
                 if(!response.first) {
                     $pageArrows.append('<button class="button" style="width: 100px; display: inline-block; margin: 5px" onclick="previousPage()"><</button>')
@@ -90,7 +98,7 @@
                     $pageArrows.empty();
                     let books = response.content;
                     books.forEach(function (book) {
-                        $books.append('<tr><td>' + book.title + '</td><td>' + book.isbn + '</td><td>' + book.author + '</td><td><a href="/book/' + book.isbn + '">Перейти</a></td></tr>');
+                        $books.append('<tr><td>' + book.title + '</td><td>' + book.isbn + '</td><td>' + book.author + '</td><td><a class="button" style="margin: 0" href="/book/' + book.isbn + '">Open</a></td></tr>');
                     })
                     if(!response.first) {
                         $pageArrows.append('<button class="button" style="width: 100px; display: inline-block; margin: 5px" onclick="previousPage()"><</button>')
@@ -138,7 +146,7 @@
                     $pageArrows.empty();
                     let books = response.content;
                     books.forEach(function (book) {
-                        $books.append('<tr><td>' + book.title + '</td><td>' + book.isbn + '</td><td>' + book.author + '</td><td><a href="/book/' + book.isbn + '">Перейти</a></td></tr>');
+                        $books.append('<tr><td>' + book.title + '</td><td>' + book.isbn + '</td><td>' + book.author + '</td><td><a class="button" style="margin: 0" href="/book/' + book.isbn + '">Open</a></td></tr>');
                     })
                     if(!response.first) {
                         $pageArrows.append('<button class="button" style="width: 100px; display: inline-block; margin: 5px" onclick="previousPage()"><</button>')

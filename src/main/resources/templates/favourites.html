@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <title>Favourite Books</title></head>
+<link th:href="@{/styles/styles.css}" rel="stylesheet"/>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<body>
+<br>
+<div id="absoluteCenteredDiv4">
+  <div th:if="${#authorization.expression('isFullyAuthenticated()')}" style="margin-bottom: 20px"><b>Welcome, <th:block th:text="${#authorization.authentication.principal.username}" />.</b></div>
+  <a href="/login" class="button display-block" style="margin: 0" th:if="${#authorization.expression('isAnonymous()')}">Log In</a>
+  <a href="/register" class="button display-block" style="margin: 0" th:if="${#authorization.expression('isAnonymous()')}">Sign Up</a>
+  <a href="/logout" class="button display-block" style="margin: 0" th:if="${#authorization.expression('isFullyAuthenticated()')}">Log Out</a>
+  <a href="/" class="button display-block" style="margin: 0" th:if="${#authorization.expression('isFullyAuthenticated()')}">Main Page</a>
+</div>
+<h1>Favourite Books</h1>
+<table>
+  <thead>
+  <tr>
+    <th>Title</th>
+    <th>ISBN</th>
+    <th>Author</th>
+    <th style="width: 100px; text-align: center"></th>
+  </tr>
+  </thead>
+  <tbody id="booksList">
+  <tr th:each="book: ${books}">
+    <td th:text="${book.title}"></td>
+    <td th:text="${book.isbn}"></td>
+    <td th:text="${book.author}"></td>
+    <td><a class="button" style="margin: 0" th:href="@{/book/{isbn}(isbn=${book.isbn})}">Open</a></td>
+  </tr>
+  </tbody>
+</table>
+<script>
+
+  $(function () {
+    function getBooks() {
+      var $books = $('#booksList');
+      var $pageArrows = $('#pageArrows');
+      $.ajax({
+        url: '/get-books',
+        success: function (response) {
+          $books.empty();
+          $pageArrows.empty();
+          let books = response.content;
+          books.forEach(function (book) {
+            $books.append('<tr><td>' + book.title + '</td><td>' + book.isbn + '</td><td>' + book.author + '</td><td><a class="button" style="margin: 0" href="/book/' + book.isbn + '">Open</a></td></tr>');
+          })
+          if(!response.first) {
+            $pageArrows.append('<button class="button" style="width: 100px; display: inline-block; margin: 5px" onclick="previousPage()"><</button>')
+          }
+          if(!response.last) {
+            $pageArrows.append('<button class="button" style="width: 100px; display: inline-block; margin: 5px" onclick="nextPage()">></button>')
+          }
+          currentPage = response.pageable.pageNumber;
+        }
+      });
+    }
+/*
+    $('#createBook').submit(function (e) {
+      e.preventDefault();
+
+      $.ajax({
+        type: 'POST',
+        url: '/book-create',
+        dataType: 'json',
+        data: JSON.stringify({
+          title: $(this).find('[name=title]').val(),
+          isbn: $(this).find('[name=isbn]').val(),
+          author: $(this).find('[name=author]').val(),
+        }),
+        beforeSend: function (xhr) {
+          xhr.setRequestHeader('Content-Type', 'application/json')
+        },
+        success: function (response) {
+          console.log(JSON.stringify(response));
+          getBooks();
+        }
+      });
+    });
+
+ */
+
+  });
+</script>
+</body>
+</html>
