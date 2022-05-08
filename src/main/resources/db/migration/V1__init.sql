@@ -46,3 +46,18 @@ values ('ADMIN');
 
 insert into user_to_permissions (user_id, permission_id)
 values ((select id from users where login = 'admin'), (select id from permissions where permission = 'ADMIN'));
+
+insert into books (isbn, author, title)
+values ('9780747532743', 'J. K. Rowling', 'Harry Potter And The Philosopher''s Stone'),
+       ('9780449212608', 'Margaret Atwood', 'The Handmaid''s Tale'),
+       ('9780486283265', 'Alexandre Dumas', 'The Three Musketeers'),
+       ('9788129140432', 'SUN TZU', 'THE ART OF WAR'),
+       ('9780062422750', 'Michael Bond', 'A Bear Called Paddington'),
+       ('9780975361511', 'Mayne Reid', 'The Headless Horseman'),
+       ('9798662731349', 'Christopher Buehlman', 'Between Two Fires'),
+       ('9780671683900', 'Larry McMurtry', 'Lonesome Dove'),
+       ('9781481418614', 'Lynn Weingarten', 'Bad Girls with Perfect Faces'),
+       ('9781442421097', 'Kathi Appelt', 'Angel Thieves'),
+       ('9780545424936', 'Maggie Stiefvater', 'The Raven Boys'),
+       ('9780545582933', 'J. K. Rowling', 'Harry Potter and the Prisoner of Azkaban'),
+       ('9780141191447', 'Shirley Jackson', 'The Haunting Of Hill House');

@@ -12,17 +12,21 @@
 </head>
 <body>
 <div class="container">
-    <form class="form-signin" method="post" action="/register">
+    <form id="sign-up" class="form-signin" method="post" action="/register">
         <h2 class="form-signin-heading">Please sign up</h2>
-        <div class="alert alert-danger" role="alert" th:if="${isError} == true">Username already exists. Try again.</div>
+        <div class="alert alert-danger" role="alert" th:if="${isAlreadyExists} == true">Username already exists. Try again.</div>
+        <div class="alert alert-danger" role="alert" th:if="${isInvalidData} == true">Check if your credentials follows:<br>
+            - Login must contain only latin letters and numbers, up to 30 characters<br>
+            - Password should be from 8 to 20 characters
+        </div>
         <p>
             <label for="login" class="sr-only">Username</label>
-            <input type="text" id="login" name="login" class="form-control" placeholder="Username" required
-                   autofocus>
+            <input type="text" id="login" name="login" class="form-control" placeholder="Username" required pattern="[A-Za-z0-9]+"
+                   maxlength="30" autofocus>
         </p>
         <p>
             <label for="password" class="sr-only">Password</label>
-            <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
+            <input type="password" id="password" name="password" class="form-control" placeholder="Password" required minlength="8" maxlength="20">
         </p>
         <button class="btn btn-lg btn-primary btn-block" type="submit">Sign up</button>
     </form>

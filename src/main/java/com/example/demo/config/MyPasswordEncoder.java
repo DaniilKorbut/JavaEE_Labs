@@ -16,11 +16,8 @@ public class MyPasswordEncoder implements PasswordEncoder {
         MessageDigest md = MessageDigest.getInstance("MD5");
         md.update(rawPassword.toString().getBytes());
         byte[] digest = md.digest();
-        String hash = DatatypeConverter
+        return DatatypeConverter
                 .printHexBinary(digest).toUpperCase();
-        System.out.println(hash);
-//        return rawPassword.toString();
-        return hash;
     }
 
     @Override

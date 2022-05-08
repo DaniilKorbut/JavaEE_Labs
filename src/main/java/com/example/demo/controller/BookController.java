@@ -5,6 +5,7 @@ import com.example.demo.db.BookEntity;
 import com.example.demo.db.BookService;
 import com.example.demo.db.UserEntity;
 import com.example.demo.db.UserService;
+import com.example.demo.dto.UserDto;
 import com.example.demo.type.UserAlreadyExistAuthenticationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -20,6 +21,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.security.Principal;
 import java.util.Optional;
 import java.util.Set;
@@ -49,7 +51,7 @@ public class BookController {
         if (book == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find book");
         }
-        if(principal != null) {
+        if (principal != null) {
             String username = principal.getName();
             Optional<UserEntity> myUser = null;
             try {
@@ -68,23 +70,23 @@ public class BookController {
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.GET)
-    public String register(final Model model, @RequestParam(name = "alreadyExists", required = false) String alreadyExists) {
-        model.addAttribute("isError", !(alreadyExists == null));
+    public String register(final Model model, @RequestParam(name = "alreadyExists", required = false) String alreadyExists, @RequestParam(name = "invalidData", required = false) String invalidData) {
+        model.addAttribute("isAlreadyExists", !(alreadyExists == null));
+        model.addAttribute("isInvalidData", !(invalidData == null));
         return "register";
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public String registerPost(UserEntity userEntity) {
-        String plainPassword = userEntity.getPassword();
-        userEntity.setPassword(myPasswordEncoder.encode(userEntity.getPassword()));
-        try {
-            userService.registerUser(userEntity);
-        } catch (UserAlreadyExistAuthenticationException e) {
-            return "redirect:/register?alreadyExists";
-        }
+    public String registerPost(@Valid UserDto userDto) {
+        UserEntity userEntity = UserEntity.builder()
+                .login(userDto.getLogin())
+                .password(myPasswordEncoder.encode(userDto.getPassword()))
+                .build();
+
+        userService.registerUser(userEntity);
 
         try {
-            servletRequest.login(userEntity.getLogin(), plainPassword);
+            servletRequest.login(userDto.getLogin(), userDto.getPassword());
         } catch (ServletException e) {
             e.printStackTrace();
             return "redirect:/login";
